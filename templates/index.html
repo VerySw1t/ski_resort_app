@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Бронирование горнолыжного курорта с прокатом</h1>
+<p class="lead">База <code>ski_resort</code>: для каждой таблицы можно посмотреть строки, добавить, изменить и удалить их.</p>
+<div class="cards">
+  {% for name, title, n in cards %}
+    <a class="card" href="{{ url_for('table_view', name=name) }}">
+      <span class="card-title">{{ title }}</span>
+      <span class="card-name">{{ name }}</span>
+      <span class="card-n">{{ n }}</span>
+    </a>
+  {% endfor %}
+  <a class="card accent" href="{{ url_for('queries') }}">
+    <span class="card-title">Запросы</span>
+    <span class="card-name">раздел 4.4 отчёта</span>
+    <span class="card-n">→</span>
+  </a>
+</div>
+{% endblock %}

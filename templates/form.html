@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ table.title }}{% endblock %}
+{% block content %}
+<h1>{{ 'Новая строка' if mode == 'new' else 'Изменение строки' }} <small>{{ table.title }}</small></h1>
+<form method="post" class="form"
+      action="{{ url_for('new_row', name=name) if mode == 'new' else url_for('edit_row', name=name) }}">
+  {% if pk %}{% for c, v in pk.items() %}<input type="hidden" name="{{ c }}" value="{{ v }}">{% endfor %}{% endif %}
+  {% for f in table.fields %}
+    {% set cur = values.get(f.name, '') %}
+    <label>
+      <span>{{ f.label }}</span>
+      {% if f.kind == 'text' %}
+        <input type="text" name="{{ f.name }}" value="{{ cur }}" maxlength="{{ f.max }}" required>
+      {% elif f.kind == 'int' %}
+        <input type="number" name="{{ f.name }}" value="{{ cur }}" step="1" min="{{ f.min }}" required>
+      {% elif f.kind == 'number' %}
+        <input type="number" name="{{ f.name }}" value="{{ cur }}" step="0.01" min="{{ f.min }}" required>
+      {% elif f.kind == 'date' %}
+        <input type="date" name="{{ f.name }}" value="{{ cur }}" required>
+      {% elif f.kind == 'choice' %}
+        <select name="{{ f.name }}" required>
+          <option value="">— выберите —</option>
+          {% for c in f.choices %}<option value="{{ c }}" {{ 'selected' if c == cur }}>{{ c }}</option>{% endfor %}
+        </select>
+      {% else %}
+        <select name="{{ f.name }}" required>
+          <option value="">— выберите —</option>
+          {% for value, label, off in options[f.name] %}
+            <option value="{{ value }}" {{ 'selected' if value == cur }} {{ 'disabled' if off }}>{{ label }}{{ ' — мест нет' if off }}</option>
+          {% endfor %}
+        </select>
+      {% endif %}
+    </label>
+  {% endfor %}
+  <div class="buttons">
+    <button class="btn primary" type="submit">Сохранить</button>
+    <a class="btn" href="{{ url_for('table_view', name=name) }}">Отмена</a>
+  </div>
+</form>
+{% endblock %}

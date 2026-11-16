@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Запросы{% endblock %}
+{% block content %}
+<h1>Запросы <small>раздел 4.4 отчёта</small></h1>
+{% for title, sql, headers, rows, error in results %}
+  <section class="report">
+    <h2>{{ loop.index }}. {{ title }}</h2>
+    <pre>{{ sql }}</pre>
+    {% if error %}
+      <div class="flash error">{{ error }}</div>
+    {% else %}
+      <div class="scroll"><table>
+        <thead><tr>{% for h in headers %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+        <tbody>
+        {% for r in rows %}<tr>{% for v in r %}<td>{{ v if v is not none else '' }}</td>{% endfor %}</tr>
+        {% else %}<tr><td colspan="{{ headers|length }}" class="empty">Нет строк</td></tr>
+        {% endfor %}
+        </tbody>
+      </table></div>
+    {% endif %}
+  </section>
+{% endfor %}
+{% endblock %}

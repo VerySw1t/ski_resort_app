@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Горнолыжный курорт{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="{{ url_for('index') }}">⛷ Горнолыжный курорт</a>
+  <nav>
+    {% for n, title in nav_tables %}
+      <a href="{{ url_for('table_view', name=n) }}"
+         class="{{ 'active' if request.view_args and request.view_args.get('name') == n else '' }}">{{ title }}</a>
+    {% endfor %}
+    <a href="{{ url_for('queries') }}" class="{{ 'active' if request.endpoint == 'queries' else '' }}">Запросы</a>
+  </nav>
+</header>
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>
